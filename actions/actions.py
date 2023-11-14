@@ -4,24 +4,32 @@
 # See this guide on how to implement these action:
 # https://rasa.com/docs/rasa/custom-actions
 
+from typing import Any, Text, Dict, List
 
-# This is a simple example for a custom action which utters "Hello World!"
+from rasa_sdk import Action, Tracker
+from rasa_sdk.executor import CollectingDispatcher
+from services.weather import get_weather
 
-# from typing import Any, Text, Dict, List
-#
-# from rasa_sdk import Action, Tracker
-# from rasa_sdk.executor import CollectingDispatcher
-#
-#
-# class ActionHelloWorld(Action):
-#
-#     def name(self) -> Text:
-#         return "action_hello_world"
-#
-#     def run(self, dispatcher: CollectingDispatcher,
-#             tracker: Tracker,
-#             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-#
-#         dispatcher.utter_message(text="Hello World!")
-#
-#         return []
+class ActionWeather(Action):
+
+    def name(self) -> Text:
+        return "action_forecast_weather"
+
+    def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+
+        city = next(tracker.get_latest_entity_values('city'),None)
+
+        if not city:
+            dispatcher.utter_message(text="sorry, no city detected, you need to specify me the city in your message")
+        
+        temp , place, desc = get_weather(city)
+
+        if not temp:
+            dispatcher.utter_message(text='I could not get the the weather info. maybe it is a spelling error')
+
+        msg = f"currently it is {temp} °C in {place}. It's a {desc} day"
+        dispatcher.utter_message(text=msg)
+        
+        return []

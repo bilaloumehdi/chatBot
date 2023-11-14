@@ -3,9 +3,19 @@ version: "3.1"
 intents:
   - greet
   - goodbye
-  - affirm
-  - deny
   - bot_challenge
+  - ask_forecast_weather
+
+slots:
+  city:
+    type: text 
+    mappings:
+    - type: from_entity
+      entity: city
+
+entities:
+  - day
+  - city
 
 responses:
   utter_greet:
@@ -16,6 +26,9 @@ responses:
 
   utter_iamabot:
   - text: "I am a bot, powered by Rasa."
+  
+actions:
+  - action_forecast_weather
 
 session_config:
   session_expiration_time: 60

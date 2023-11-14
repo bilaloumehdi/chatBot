@@ -1,2 +1,4 @@
-/venv
 .rasa
+/venv
+services/__pycache__
+actions/__pycache__

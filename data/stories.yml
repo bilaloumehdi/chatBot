@@ -6,4 +6,19 @@ stories:
   steps:
   - intent: greet
   - action: utter_greet
-  
+
+- story: ask for weather directly
+  steps:
+  - intent: ask_forecast_weather
+  - action: action_forecast_weather
+  - intent: goodbye
+  - action: utter_goodbye
+
+- story: ask for weather with hi
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: ask_forecast_weather
+  - action: action_forecast_weather
+  - intent: goodbye
+  - action: utter_goodbye
